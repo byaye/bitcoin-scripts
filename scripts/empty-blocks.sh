@@ -28,19 +28,19 @@ for i in $(seq "$start_block" "$end_block"); do
     blockinfo=$(bitcoin-cli getblock $blockhash)
 
     # Print the current block number
-    echo "Checking block: $i"
+    echo "Checking block: $i..."
 
     # Extract the number of transactions in the block
     txs=$(echo "$blockinfo" | jq -r '.tx | length')
 
-    # Print the number of transactions
-    echo "Number of transactions: $txs"
-
     # Check if the block has only one transaction (empty block)
     if [ "$txs" -eq 1 ]; then
         ((result++))
-        echo "This block is empty!"
+        echo "  This block is empty! (only the coinbase transaction is present)"
+    else
+        echo "  This block is not empty. $txs transactions were included"
     fi
+    echo "So far I found $result empty blocks..."
 done
 
 # Print the final result
